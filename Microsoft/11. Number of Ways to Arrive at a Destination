@@ -1,0 +1,32 @@
+int[][] graph = new int[n][n];
+        for (int[] road : roads) {
+            graph[road[0]][road[1]] = road[2];
+            graph[road[1]][road[0]] = road[2];
+        }
+        int[] dist = new int[n];
+        int[] ways = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(ways, 0);
+        dist[0] = 0;
+        ways[0] = 1;
+        boolean[] visited = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            int u = -1;
+            for (int j = 0; j < n; j++) {
+                if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
+                    u = j;
+                }
+            }
+            visited[u] = true;
+            for (int v = 0; v < n; v++) {
+                if (graph[u][v] != 0) {
+                    if (dist[v] > dist[u] + graph[u][v]) {
+                        dist[v] = dist[u] + graph[u][v];
+                        ways[v] = ways[u];
+                    } else if (dist[v] == dist[u] + graph[u][v]) {
+                        ways[v] = (ways[v] + ways[u]) % 1000000007;
+                    }
+                }
+            }
+        }
+        return ways[n - 1];
